@@ -1,9 +1,16 @@
+'''
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import User
+'''
+
+from django.shortcuts import render,redirect
+from django.http import HttpResponse
+from django.contrib import auth
+# 引入装饰器函数
 
 # Create your views here.
-
+'''
 def login(request):
     if request.method == "POST":
         Accountname = request.POST.get('Account', None)
@@ -25,3 +32,20 @@ def login(request):
                # return HttpResponse('登陆成功')
     #return render(request, 'login/login.html')
     return HttpResponse('你不是POST')
+'''
+
+def login(request):
+    if request.method == "GET":
+        return render(request, "login.html")
+    username = request.POST.get("username")
+    password = request.POST.get("pwd")
+    if username and password :
+        user_obj = auth.authenticate(username=username, password=password)
+        # print(user_obj.username)
+        if not user_obj:
+            return HttpResponse('账号密码错误')
+        else:
+            auth.login(request, user_obj)
+            return redirect('/index/')
+    else:
+        return HttpResponse('账号密码不能为空')
