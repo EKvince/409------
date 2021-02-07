@@ -39,13 +39,18 @@ def login(request):
         return render(request, "login.html")
     username = request.POST.get("username")
     password = request.POST.get("pwd")
+    UserType=request.POST.get('Type') #用于区分老师还是学生
     if username and password :
         user_obj = auth.authenticate(username=username, password=password)
         # print(user_obj.username)
         if not user_obj:
             return HttpResponse('账号密码错误')
-        else:
+        else:#成功登陆
             auth.login(request, user_obj)
-            return redirect('/index/')
+            if UserType=='S':
+                # auth.login(request, user_obj)
+                return redirect('/index/')
+            else:
+                return redirect('/teacher/')
     else:
         return HttpResponse('账号密码不能为空')
