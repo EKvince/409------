@@ -74,6 +74,16 @@ class AuthUserUserPermissions(models.Model):
         unique_together = (('user', 'permission'),)
 
 
+class Comments(models.Model):
+    sno = models.CharField(db_column='Sno', max_length=10)  # Field name made lowercase.
+    tno = models.CharField(db_column='Tno', max_length=10)  # Field name made lowercase.
+    message = models.CharField(db_column='Message', max_length=100)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'comments'
+
+
 class DjangoAdminLog(models.Model):
     action_time = models.DateTimeField()
     object_id = models.TextField(blank=True, null=True)
@@ -128,23 +138,48 @@ class LoginUser(models.Model):
         db_table = 'login_user'
 
 
+class SMajor(models.Model):
+    mno = models.IntegerField(db_column='Mno', primary_key=True)  # Field name made lowercase.
+    mtext = models.CharField(db_column='Mtext', max_length=20)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 's_major'
+
+
 class St(models.Model):
     sno = models.CharField(db_column='Sno', max_length=10)  # Field name made lowercase.
-    sname = models.CharField(db_column='Sname', max_length=255)  # Field name made lowercase.
+    sname = models.CharField(db_column='Sname', max_length=10)  # Field name made lowercase.
     tno = models.CharField(db_column='Tno', max_length=10)  # Field name made lowercase.
-    tname = models.CharField(db_column='Tname', max_length=255)  # Field name made lowercase.
-    id = models.IntegerField(primary_key=True)
-
+    tname = models.CharField(db_column='Tname', max_length=10)  # Field name made lowercase.
     class Meta:
         managed = False
         db_table = 'st'
 
 
-class TIntroduce(models.Model):
-    tno = models.CharField(db_column='Tno', primary_key=True, max_length=20)  # Field name made lowercase.
-    d_information = models.CharField(db_column='D_information', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    id = models.IntegerField()
+class Student(models.Model):
+    sno = models.CharField(db_column='Sno', primary_key=True, max_length=10)  # Field name made lowercase.
+    sname = models.CharField(db_column='Sname', max_length=10)  # Field name made lowercase.
+    sex = models.CharField(db_column='Sex', max_length=2)  # Field name made lowercase.
+    mno = models.IntegerField(db_column='Mno')  # Field name made lowercase.
+    contact = models.CharField(db_column='Contact', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    gpa = models.FloatField(db_column='GPA')  # Field name made lowercase.
 
     class Meta:
         managed = False
-        db_table = 't_introduce'
+        db_table = 'student'
+
+
+class Teacher(models.Model):
+    tno = models.CharField(db_column='Tno', primary_key=True, max_length=10)  # Field name made lowercase.
+    tname = models.CharField(db_column='Tname', max_length=10)  # Field name made lowercase.
+    sex = models.CharField(db_column='Sex', max_length=2)  # Field name made lowercase.
+    pro = models.CharField(db_column='Pro', max_length=30)  # Field name made lowercase.
+    number = models.IntegerField()
+    contact = models.CharField(db_column='Contact', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    d_information = models.CharField(db_column='D_information', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    state = models.IntegerField(db_column='State')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'teacher'

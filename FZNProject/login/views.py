@@ -1,12 +1,13 @@
-'''
+
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
-from .models import User
-'''
+from django.http import HttpResponse,JsonResponse
+from .models import Teacher,Student
+from django.contrib.auth.models import User
 
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib import auth
+import json
 # 引入装饰器函数
 
 # Create your views here.
@@ -34,12 +35,31 @@ def login(request):
     return HttpResponse('你不是POST')
 '''
 
+def Get_UserType(username):
+    # UserType=Teacher.objects.get(tno=username)
+    try:
+        UserType = Teacher.objects.get(tno=username)
+        return 'T'
+    except Teacher.DoesNotExist:
+        try:
+            UserType = Student.objects.get(sno=username)
+            return 'S'
+        except Student.DoesNotExist:
+            return None
+
+def reg():
+    user = User.objects.create_user(100,None,'123')
+    user.save()
+    return None
+
+
 def login(request):
     if request.method == "GET":
         return render(request, "login.html")
-    username = request.POST.get("username")
-    password = request.POST.get("pwd")
-    UserType=request.POST.get('Type') #用于区分老师还是学生
+    data=json.loads(request.body.decode('utf-8'))
+    username = data.get('username')
+    password = data.get('password')
+    # UserType=Get_UserType(username)
     if username and password :
         user_obj = auth.authenticate(username=username, password=password)
         # print(user_obj.username)
@@ -47,10 +67,15 @@ def login(request):
             return HttpResponse('账号密码错误')
         else:#成功登陆
             auth.login(request, user_obj)
-            if UserType=='S':
-                # auth.login(request, user_obj)
-                return redirect('/index/')
-            else:
-                return redirect('/teacher/')
+            UserType=Get_UserType(username)
+            data={
+                'UserType':UserType
+            }
+            return JsonResponse(data)
+            # if UserType=='S':
+            #     # auth.login(request, user_obj)
+            #     return redirect('/index/')
+            # else:
+            #     return redirect('/teacher/')
     else:
         return HttpResponse('账号密码不能为空')

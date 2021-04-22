@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'login',
     'index',
     'Teacher',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -84,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dznproject',        #数据库名字
         'USER': 'root',          #账号
-        'PASSWORD': '123456',      #密码
+        'PASSWORD': 'root',      #密码
         'HOST': '127.0.0.1',    #IP
         'PORT': '3306'                   #端口
     }
@@ -128,3 +130,17 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# 增加跨域忽略
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+# 允许所有方法
+CORS_ALLOW_METHODS = ('*')
+# 允许所有请求头
+CORS_ALLOW_HEADERS = ('*')
+
+CORS_ORIGIN_WHITELIST = (
+    'https://127.0.0.1:8080',
+    'https://localhost:8080', #凡是出现在白名单中的域名，都可以访问后端接口
+)
+CORS_ALLOW_CREDENTIALS = True  # 指明在跨域访问中，后端是否支持对cookie的操作
